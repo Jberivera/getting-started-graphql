@@ -30,7 +30,21 @@ function getVideos (id) {
   });
 }
 
+function createVideo ({ title, duration, released }) {
+  const video = {
+    id: (new Buffer(title, 'utf8').toString('base64')),
+    title,
+    duration,
+    released
+  };
+
+  videos.push(video);
+
+  return video;
+}
+
 module.exports = {
   getVideoById,
-  getVideos
+  getVideos,
+  createVideo
 };
