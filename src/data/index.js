@@ -24,6 +24,13 @@ function getVideoById (id) {
   });
 }
 
+function getVideos (id) {
+  return new Promise((resolve) => {
+    resolve(videos);
+  });
+}
+
 module.exports = {
-  getVideoById
+  getVideoById,
+  getVideos
 };
