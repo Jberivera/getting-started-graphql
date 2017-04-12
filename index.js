@@ -15,7 +15,7 @@ const {
 } = require('graphql');
 
 const { getVideoById, getVideos, createVideo } = require('./src/data');
-const nodeInterface = require('./src/node');
+const { nodeInterface } = require('./src/node');
 
 const PORT = process.env.PORT || 5000;
 const server = express();
@@ -46,6 +46,10 @@ const videoType = new GraphQLObjectType({
       type: new GraphQLNonNull(GraphQLID),
       description: 'The id of the video.'
     },
+    type: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: 'GraphQL Object Type'
+    },
     title: {
       type: GraphQLString,
       description: 'The title of the video.'
@@ -59,8 +63,7 @@ const videoType = new GraphQLObjectType({
       description: 'Whether or not the viewer has watched the video.'
     }
   },
-  interfaces: [ nodeInterface ],
-  isTypeOf: (data) => !!data.title
+  interfaces: [ nodeInterface ]
 });
 
 const queryType = new GraphQLObjectType({

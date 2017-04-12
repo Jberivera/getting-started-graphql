@@ -3,7 +3,8 @@
 const {
   GraphQLInterfaceType,
   GraphQLNonNull,
-  GraphQLID
+  GraphQLID,
+  GraphQLString
 } = require('graphql');
 
 const nodeInterface = new GraphQLInterfaceType({
@@ -11,8 +12,14 @@ const nodeInterface = new GraphQLInterfaceType({
   fields: {
     id: {
       type: new GraphQLNonNull(GraphQLID)
+    },
+    type: {
+      type: new GraphQLNonNull(GraphQLString)
     }
-  }
+  },
+  resolveType: (data) => !!data.title
 });
 
-module.exports = nodeInterface;
+module.exports = {
+  nodeInterface
+};

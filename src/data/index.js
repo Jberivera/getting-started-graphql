@@ -1,5 +1,6 @@
 const videoA = {
   id: '1',
+  type: 'Video',
   title: 'Foo Redux',
   duration: 180,
   watched: true
@@ -7,6 +8,7 @@ const videoA = {
 
 const videoB = {
   id: '2',
+  type: 'Video',
   title: 'Boo React',
   duration: 180,
   watched: false
