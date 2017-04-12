@@ -45,8 +45,18 @@ function createVideo ({ title, duration, released }) {
   return video;
 }
 
+const TYPES = {
+  video: getVideoById
+};
+
+
+function getObjectById (type, id) {
+  return TYPES[type](id);
+}
+
 module.exports = {
   getVideoById,
   getVideos,
-  createVideo
+  createVideo,
+  getObjectById
 };

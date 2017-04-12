@@ -1,25 +1,28 @@
 'use strict';
 
 const {
-  GraphQLInterfaceType,
-  GraphQLNonNull,
-  GraphQLID,
-  GraphQLString
-} = require('graphql');
+  nodeDefinitions,
+  fromGlobalId
+} = require('graphql-relay');
+const { getObjectById } = require('./data');
 
-const nodeInterface = new GraphQLInterfaceType({
-  name: 'Node',
-  fields: {
-    id: {
-      type: new GraphQLNonNull(GraphQLID)
-    },
-    type: {
-      type: new GraphQLNonNull(GraphQLString)
-    }
+const { nodeInterface, nodeField } = nodeDefinitions(
+  (globalId) => {
+    const { type, id } = fromGlobalId(globalId);
+    return getObjectById(type.toLowerCase(), id);
   },
-  resolveType: (data) => !!data.title
-});
+  (object) => {
+    const { videoType } = require('../');
+
+    if (object.type === 'Video') {
+      return videoType;
+    }
+
+    return null;
+  }
+);
 
 module.exports = {
-  nodeInterface
+  nodeInterface,
+  nodeField
 };
