@@ -15,7 +15,12 @@ const {
 } = require('graphql');
 
 const { getVideoById, getVideos, createVideo } = require('./src/data');
-const { globalIdField } = require('graphql-relay');
+const {
+  globalIdField,
+  connectionDefinitions,
+  connectionFromPromisedArray,
+  connectionArgs
+} = require('graphql-relay');
 const { nodeInterface, nodeField } = require('./src/node');
 
 const PORT = process.env.PORT || 5000;
@@ -64,14 +69,30 @@ const videoType = new GraphQLObjectType({
   interfaces: [ nodeInterface ]
 });
 
+exports.videoType = videoType;
+
+const { connectionType: videoConnection } = connectionDefinitions({
+  nodeType: videoType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+      description: 'A count of the total number of objects in this connection.',
+      resolve: (conn) => conn.edges.length
+    }
+  })
+});
 const queryType = new GraphQLObjectType({
   name: 'QueryType',
   description: 'The root query type.',
   fields: {
     node: nodeField,
     videos: {
-      type: new GraphQLList(videoType),
-      resolve: getVideos
+      type: videoConnection,
+      args: connectionArgs,
+      resolve: (_, args) => connectionFromPromisedArray(
+        getVideos(),
+        args
+      )
     },
     video: {
       type: videoType,
@@ -87,8 +108,6 @@ const queryType = new GraphQLObjectType({
     }
   }
 });
-
-exports.videoType = videoType;
 
 const mutationType = new GraphQLObjectType({
   name: 'Mutation',
